@@ -15,7 +15,7 @@ namespace ManagerApp
     public partial class Form1 : Form
     {
         private static readonly string MAIN_APP
-            = @"C:\Users\太郎\Documents\Visual Studio 2012\Projects\AppDomainSample\MainApp\bin\Debug\MainApp.exe";
+            = @"..\..\..\MainApp\bin\Debug\MainApp.exe";
 
         private AppDomain _mainDomain = null;
         private Proxy _mainProxy = null;
@@ -35,10 +35,11 @@ namespace ManagerApp
             Console.WriteLine(AppDomain.CurrentDomain.FriendlyName);
 
             var info = new AppDomainSetup();
-            info.ApplicationBase = Path.GetDirectoryName(Form1.MAIN_APP);
+            var asmFile = Path.Combine(Environment.CurrentDirectory, Form1.MAIN_APP);
+            info.ApplicationBase = Path.GetDirectoryName(asmFile);
             this._mainDomain = AppDomain.CreateDomain("MainAppDomain", null, info);
             this._mainProxy = (Proxy)this._mainDomain.CreateInstanceAndUnwrap(typeof(Proxy).Assembly.FullName, typeof(Proxy).FullName);
-            this._mainProxy.Start(Form1.MAIN_APP);
+            this._mainProxy.Start(asmFile);
 
             Console.WriteLine(AppDomain.CurrentDomain.FriendlyName);
         }
